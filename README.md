@@ -1,6 +1,6 @@
 # testing-Front-End
 # Cara Run Website
-The source code and the applications are located in the file named “testing-Front-End”. The file is in the zip file and extract the file to get the application. The following component that must be installed and run the application will be shown below:
+The source code and the applications are located in the file named “testing-Front-End”. and the project on folder "Views => Home => Index.cshtml" The file is in the zip file and extract the file to get the application. The following component that must be installed and run the application will be shown below:
 1.	Visual Studio 2019
 2.	C# Asp.net MVC
 3.	Framework (.NET Framework 4.8)
