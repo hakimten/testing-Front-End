@@ -1,0 +1,395 @@
+﻿
+@{
+    ViewBag.Title = "TEST";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wizard Form</title>
+    <link rel="stylesheet" href="styles.css">
+    <Style>
+        /* styles.css */
+        .wizard {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .wizard-step {
+            display: none;
+        }
+
+            .wizard-step h2 {
+                font-size: 24px;
+                margin-top: 0;
+            }
+
+            .wizard-step h3 {
+                font-size: 18px;
+            }
+
+        .dropdown {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .photo-upload {
+            margin-bottom: 10px;
+        }
+
+            .photo-upload input[type="file"] {
+                display: none;
+            }
+
+        .photo-preview {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            background-color: #f8f8f8;
+            background-size: cover;
+            background-position: center;
+            cursor: pointer;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+            button:hover {
+                background-color: #45a049;
+            }
+
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+    </Style>
+    <script>
+        // script.js
+
+        // Step counter
+        let currentStep = 0;
+
+        // Form data
+        let formData = {};
+
+        // Load provinces from JSON data
+        const loadProvinces = () => {
+            const provinceDropdown = document.getElementById('province');
+            provinces.forEach(province => {
+                const option = document.createElement('option');
+                option.value = province.id;
+                option.text = province.name;
+                provinceDropdown.appendChild(option);
+            });
+        };
+
+        // Load cities based on selected province
+        const loadCities = (provinceId) => {
+            const cityDropdown = document.getElementById('city');
+            // Clear existing options
+            cityDropdown.innerHTML = '<option value="">Select City</option>';
+            if (provinceId) {
+                const selectedProvince = provinces.find(province => province.id === provinceId);
+                selectedProvince.cities.forEach(city => {
+                    const option = document.createElement('option');
+                    option.value = city.id;
+                    option.text = city.name;
+                    cityDropdown.appendChild(option);
+                });
+            }
+        };
+
+        // Load districts based on selected city
+        const loadDistricts = (cityId) => {
+            const districtDropdown = document.getElementById('district');
+            // Clear existing options
+            districtDropdown.innerHTML = '<option value="">Select District</option>';
+            if (cityId) {
+                const selectedCity = cities.find(city => city.id === cityId);
+                selectedCity.districts.forEach(district => {
+                    const option = document.createElement('option');
+                    option.value = district.id;
+                    option.text = district.name;
+                    districtDropdown.appendChild(option);
+                });
+            }
+        };
+
+        // Load subdistricts based on selected district
+        const loadSubdistricts = (districtId) => {
+            const subdistrictDropdown = document.getElementById('subdistrict');
+            // Clear existing options
+            subdistrictDropdown.innerHTML = '<option value="">Select Subdistrict</option>';
+            if (districtId) {
+                const selectedDistrict = districts.find(district => district.id === districtId);
+                selectedDistrict.subdistricts.forEach(subdistrict => {
+                    const option = document.createElement('option');
+                    option.value = subdistrict.id;
+                    option.text = subdistrict.name;
+                    subdistrictDropdown.appendChild(option);
+                });
+            }
+        };
+
+        // Update form data
+        const updateFormData = () => {
+            formData.firstName = document.getElementById('firstName').value;
+            formData.lastName = document.getElementById('lastName').value;
+            formData.bio = document.getElementById('bio').value;
+            formData.province = document.getElementById('province').value;
+            formData.city = document.getElementById('city').value;
+            formData.district = document.getElementById('district').value;
+            formData.subdistrict = document.getElementById('subdistrict').value;
+        };
+
+        // Display summary of form data
+        const displaySummary = () => {
+            const summaryElement = document.getElementById('summary');
+            summaryElement.textContent = JSON.stringify(formData, null, 2);
+        };
+
+        // Display selected photo preview
+        const displayPhotoPreview = (input, previewId) => {
+            const file = input.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const previewElement = document.getElementById(previewId);
+                    previewElement.style.backgroundImage = `url(${event.target.result})`;
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+
+        // Event listeners for file input change
+        document.getElementById('selfiePhoto').addEventListener('change', (event) => {
+            displayPhotoPreview(event.target, 'selfiePreview');
+        });
+
+        document.getElementById('ktpPhoto').addEventListener('change', (event) => {
+            displayPhotoPreview(event.target, 'ktpPreview');
+        });
+
+        document.getElementById('freePhoto').addEventListener('change', (event) => {
+            displayPhotoPreview(event.target, 'freePreview');
+        });
+
+        // Go to next step
+        const nextStep = () => {
+            if (currentStep === 0) {
+                updateFormData();
+                loadCities(formData.province);
+                currentStep++;
+            } else if (currentStep === 1) {
+                currentStep++;
+            }
+            showStep();
+        };
+
+        // Go to previous step
+        const previousStep = () => {
+            if (currentStep === 1) {
+                currentStep--;
+            } else if (currentStep === 2) {
+                currentStep--;
+            }
+            showStep();
+        };
+
+        // Show current step
+        const showStep = () => {
+            const wizardSteps = document.querySelectorAll('.wizard-step');
+            wizardSteps.forEach((step, index) => {
+                if (index === currentStep) {
+                    step.style.display = 'block';
+                } else {
+                    step.style.display = 'none';
+                }
+            });
+        };
+
+        // Form submit event listener
+        document.getElementById('wizardForm').addEventListener('submit', (event) => {
+            event.preventDefault();
+            updateFormData();
+            displaySummary();
+            // You can now proceed to send the form data to the API
+        });
+
+        // Initialize the wizard
+        loadProvinces();
+        showStep();
+    </script>
+    <script>
+        // data.js
+
+        // Sample data for dropdowns
+        const provinces = [
+            {
+                id: '1', name: 'Province 1', cities: [
+                    {
+                        id: '1', name: 'City 1', districts: [
+                            {
+                                id: '1', name: 'District 1', subdistricts: [
+                                    { id: '1', name: 'Subdistrict 1' },
+                                    { id: '2', name: 'Subdistrict 2' },
+                                ]
+                            },
+                            {
+                                id: '2', name: 'District 2', subdistricts: [
+                                    { id: '3', name: 'Subdistrict 3' },
+                                    { id: '4', name: 'Subdistrict 4' },
+                                ]
+                            },
+                        ]
+                    },
+                    {
+                        id: '2', name: 'City 2', districts: [
+                            {
+                                id: '3', name: 'District 3', subdistricts: [
+                                    { id: '5', name: 'Subdistrict 5' },
+                                    { id: '6', name: 'Subdistrict 6' },
+                                ]
+                            },
+                            {
+                                id: '4', name: 'District 4', subdistricts: [
+                                    { id: '7', name: 'Subdistrict 7' },
+                                    { id: '8', name: 'Subdistrict 8' },
+                                ]
+                            },
+                        ]
+                    },
+                ]
+            },
+            {
+                id: '2', name: 'Province 2', cities: [
+                    {
+                        id: '3', name: 'City 3', districts: [
+                            {
+                                id: '5', name: 'District 5', subdistricts: [
+                                    { id: '9', name: 'Subdistrict 9' },
+                                    { id: '10', name: 'Subdistrict 10' },
+                                ]
+                            },
+                            {
+                                id: '6', name: 'District 6', subdistricts: [
+                                    { id: '11', name: 'Subdistrict 11' },
+                                    { id: '12', name: 'Subdistrict 12' },
+                                ]
+                            },
+                        ]
+                    },
+                    {
+                        id: '4', name: 'City 4', districts: [
+                            {
+                                id: '7', name: 'District 7', subdistricts: [
+                                    { id: '13', name: 'Subdistrict 13' },
+                                    { id: '14', name: 'Subdistrict 14' },
+                                ]
+                            },
+                            {
+                                id: '8', name: 'District 8', subdistricts: [
+                                    { id: '15', name: 'Subdistrict 15' },
+                                    { id: '16', name: 'Subdistrict 16' },
+                                ]
+                            },
+                        ]
+                    },
+                ]
+            },
+        ];
+
+        const cities = [
+            // City data goes here
+        ];
+
+        const districts = [
+            // District data goes here
+        ];
+
+    </script>
+</head>
+<body>
+    <div class="wizard">
+        <form id="wizardForm">
+            <!-- Wizard 1 -->
+            <div class="wizard-step">
+                <h2>Step 1</h2>
+                <input type="text" id="firstName" placeholder="First Name">
+                <input type="text" id="lastName" placeholder="Last Name">
+                <textarea id="bio" placeholder="Biodata"></textarea>
+                <select id="province" class="dropdown" onchange="loadCities(this.value)">
+                    <option value="">Select Province</option>
+                    <!-- Render options dynamically with JavaScript -->
+                </select>
+                <select id="city" class="dropdown" onchange="loadDistricts(this.value)">
+                    <option value="">Select City</option>
+                    <!-- Render options dynamically with JavaScript -->
+                </select>
+                <select id="district" class="dropdown" onchange="loadSubdistricts(this.value)">
+                    <option value="">Select District</option>
+                    <!-- Render options dynamically with JavaScript -->
+                </select>
+                <select id="subdistrict" class="dropdown">
+                    <option value="">Select Subdistrict</option>
+                    <!-- Render options dynamically with JavaScript -->
+                </select>
+                <button type="button" onclick="nextStep()">Next</button>
+            </div>
+
+            <!-- Wizard 2 -->
+            <div class="wizard-step">
+                <h2>Step 2</h2>
+                <h3>Upload Photos</h3>
+                <div class="photo-upload">
+                    <input type="file" id="selfiePhoto" accept="image/*">
+                    <div id="selfiePreview" class="photo-preview"></div>
+                </div>
+                <div class="photo-upload">
+                    <input type="file" id="ktpPhoto" accept="image/*">
+                    <div id="ktpPreview" class="photo-preview"></div>
+                </div>
+                <div class="photo-upload">
+                    <input type="file" id="freePhoto" accept="image/*">
+                    <div id="freePreview" class="photo-preview"></div>
+                </div>
+                <button type="button" onclick="previousStep()">Previous</button>
+                <button type="button" onclick="nextStep()">Next</button>
+            </div>
+
+            <!-- Wizard 3 -->
+            <div class="wizard-step">
+                <h2>Step 3</h2>
+                <h3>Summary</h3>
+                <pre id="summary"></pre>
+                <button type="button" onclick="previousStep()">Previous</button>
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
+
+

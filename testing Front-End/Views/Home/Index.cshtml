@@ -1,0 +1,417 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<head>
+    <!-- css untuk select2 -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="~/fstdropdown-master/fstdropdown.css" rel="stylesheet" />
+    <link href="~/fstdropdown-master/fstdropdown.min.css" rel="stylesheet" />
+    <script src="~/fstdropdown-master/fstdropdown.min.js"></script>
+    <style>
+        .preview {
+            display: inline-block;
+            position: relative;
+        }
+
+            .preview img {
+                transition: transform 0.3s;
+            }
+
+            .preview:hover img {
+                transform: scale(1.5);
+            }
+
+        .select2-container .select2-selection--single {
+            height: 34px !important;
+        }
+
+        .select2-container--default .select2-selection--single {
+            border: 1px solid #ccc !important;
+            border-radius: 0px !important;
+        }
+
+        .center {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .form-input {
+            width: 350px;
+            padding: 20px;
+            background: #fff;
+            box-shadow: -3px -3px 7px rgba(94, 104, 121, 0.377), 3px 3px 7px rgba(94, 104, 121, 0.377);
+        }
+
+            .form-input img {
+                width: 100%;
+                display: none;
+                margin-bottom: 30px;
+            }
+
+            .form-input input {
+                display: none;
+            }
+
+            .form-input label {
+                display: block;
+                width: 45%;
+                height: 45px;
+                margin-left: 25%;
+                line-height: 50px;
+                text-align: center;
+                background: #1172c2;
+                color: #fff;
+                font-size: 15px;
+                font-family: "Open Sans",sans-serif;
+                text-transform: Uppercase;
+                font-weight: 600;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+            .close:hover,
+            .close:focus {
+                color: black;
+                text-decoration: none;
+                cursor: pointer;
+            }
+    </style>
+    <script>
+        $(".select2").select2();
+
+        function showPreview(event) {
+            if (event.target.files.length > 0) {
+                var src = URL.createObjectURL(event.target.files[0]);
+                var preview = document.getElementById("file-ip-1-preview");
+                preview.src = src;
+                preview.style.display = "block";
+            }
+        }
+
+        function showPreview2(event) {
+            if (event.target.files.length > 0) {
+                var src = URL.createObjectURL(event.target.files[0]);
+                var preview = document.getElementById("file-ip-1-preview-2");
+                preview.src = src;
+                preview.style.display = "block";
+            }
+        }
+        function showPreview3(event) {
+            if (event.target.files.length > 0) {
+                var src = URL.createObjectURL(event.target.files[0]);
+                var preview = document.getElementById("file-ip-1-preview-3");
+                preview.src = src;
+                preview.style.display = "block";
+            }
+        }
+        function openModal() {
+            var modal = document.getElementById("modal");
+            var imageInput = document.getElementById("file-ip-1");
+            var modalImage = document.getElementById("inputImage");
+            var imageInput2 = document.getElementById("file-ip-12");
+            var modalImage2 = document.getElementById("inputImage2");
+            var imageInput3 = document.getElementById("file-ip-13");
+            var modalImage3 = document.getElementById("inputImage3");
+            modal.style.display = "block";
+
+            var inputText = document.getElementById("firstname");
+            var text = document.getElementById("first").value;
+            inputText.innerHTML = text;
+
+            var lastname = document.getElementById("lastname");
+            var lasttext = document.getElementById("last").value;
+            lastname.innerHTML = lasttext;
+
+            var biodata = document.getElementById("biodataa");
+            var biodatatext = document.getElementById("biodata").value;
+            biodata.innerHTML = biodatatext;
+
+            var provinsi = document.getElementById("provinsii");
+            var provinsitext = document.getElementById("provinsi").value;
+            provinsi.innerHTML = provinsitext;
+
+            var kabupaten = document.getElementById("kabupatenn");
+            var kabupatentext = document.getElementById("kabupaten").value;
+            kabupaten.innerHTML = kabupatentext;
+
+            var kecamatan = document.getElementById("kecamatann");
+            var kecamatantext = document.getElementById("kecamatan").value;
+            kecamatan.innerHTML = kecamatantext;
+
+            var kelurahan = document.getElementById("kelurahann");
+            var kelurahantext = document.getElementById("kelurahan").value;
+            kelurahan.innerHTML = kelurahantext;
+
+            // Baca file gambar yang dipilih
+            var file = imageInput.files[0];
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                // Menampilkan gambar pada modal
+                modalImage.src = e.target.result;
+                modal.style.display = "block";
+
+                // Mengatur ukuran gambar sesuai dengan modal
+                modalImage.style.maxWidth = modal.offsetWidth + "px";
+                modalImage.style.maxHeight = modal.offsetHeight + "px";
+            }
+            // Baca file gambar yang dipilih
+            var file2 = imageInput2.files[0];
+            var reader2 = new FileReader();
+
+            reader2.onload = function (e) {
+                // Menampilkan gambar pada modal
+                modalImage2.src = e.target.result;
+                modal.style.display = "block";
+
+                // Mengatur ukuran gambar sesuai dengan modal
+                modalImage.style.maxWidth = modal.offsetWidth + "px";
+                modalImage.style.maxHeight = modal.offsetHeight + "px";
+            }
+            // Baca file gambar yang dipilih
+            var file3 = imageInput3.files[0];
+            var reader3 = new FileReader();
+
+            reader3.onload = function (e) {
+                // Menampilkan gambar pada modal
+                modalImage3.src = e.target.result;
+                modal.style.display = "block";
+
+                // Mengatur ukuran gambar sesuai dengan modal
+                modalImage.style.maxWidth = modal.offsetWidth + "px";
+                modalImage.style.maxHeight = modal.offsetHeight + "px";
+            }
+
+            reader.readAsDataURL(file);
+            reader2.readAsDataURL(file2);
+            reader3.readAsDataURL(file3);
+        }
+
+        function closeModal() {
+            var modal = document.getElementById("modal");
+            modal.style.display = "none";
+        }
+
+    </script>
+</head>
+<div class="row">
+    <!-- Area Chart -->
+    <div class="col-xl-12 col-lg-12">
+        <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Form Input data</h6>
+                <div class="dropdown no-arrow">
+                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                         aria-labelledby="dropdownMenuLink">
+                        <div class="dropdown-header">Dropdown Header:</div>
+                        <a class="dropdown-item" href="#">Action</a>
+                        <a class="dropdown-item" href="#">Another action</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">Something else here</a>
+                    </div>
+                </div>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+                <h6 class="m-0 font-weight-bold text-danger">*Input Personal Data <i class="fa fa-user"></i></h6>
+                <br />
+                <div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">First Name</label>
+                        <input type="text" class="form-control" id="first" aria-describedby="emailHelp" placeholder="Enter First Name">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Last Name</label>
+                        <input type="text" class="form-control" id="last" aria-describedby="emailHelp" placeholder="Enter Last Name">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Last Name</label>
+                        <textarea class="form-control" id="biodata" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Provinsi</label>
+                        <select class='fstdropdown-select' id="provinsi">
+                            <option value="">Select option</option>
+                            <option>Select Provinsi</option>
+                            <option data-tokens="Jawa Barat">Jawa Barat</option>
+                            <option data-tokens="Jakarta">Jakarta</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Kabupaten</label>
+                        <select class='fstdropdown-select' id="kabupaten">
+                            <option>Select kabupaten</option>
+                            <option value="Bekasi">Bekasi</option>
+                            <option value="Bekasi Timur">Bekasi Timur</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Kecamatan</label>
+                        <select class='fstdropdown-select' id="kecamatan">
+                            <option>Select Kecamatan</option>
+                            <option value="Cikarang Selatan">Cikarang Selatan</option>
+                            <option value="Cikarang Utara">Cikarang Utara</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Kelurahan</label>
+                        <select class='fstdropdown-select' id="kelurahan">
+                            <option>Select Kelurahan</option>
+                            <option value="Pasir Gombong">Pasir Gombong</option>
+                            <option value="Mekar Mukti">Mekar Mukti</option>
+                        </select>
+                    </div>
+                </div>
+                <br />
+                <h6 class="m-0 font-weight-bold text-danger">*Upload Image <i class="fa fa-image"></i></h6>
+                <br />
+                <div>
+                    <div class="center">
+                        <div class="form-input">
+                            <div class="preview">
+                                <img id="file-ip-1-preview">
+                            </div>
+                            <label for="file-ip-1"><i class="fa fa-upload"></i>  KTP</label>
+                            <input type="file" id="file-ip-1" accept="image/*" onchange="showPreview(event);">
+                        </div>
+                    </div>
+                    <br />
+                    <div class="center">
+                        <div class="form-input">
+                            <div class="preview">
+                                <img id="file-ip-1-preview-2">
+                            </div>
+                            <label for="file-ip-12"><i class="fa fa-upload"></i>  Selfie</label>
+                            <input type="file" id="file-ip-12" accept="image/*" onchange="showPreview2(event);">
+                        </div>
+                    </div>
+                    <br />
+                    <div class="center">
+                        <div class="form-input">
+                            <div class="preview">
+                                <img id="file-ip-1-preview-3">
+                            </div>
+                            <label for="file-ip-13"><i class="fa fa-upload"></i>  Bebas</label>
+                            <input type="file" id="file-ip-13" accept="image/*" onchange="showPreview3(event);">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/fstdropdown-master/fstdropdown.js"></script>
+<center>
+    <button class="btn btn-lg btn-primary" style="width: auto;" onclick="openModal()"><i class="fa fa-print"></i> Load Data</button>
+</center>
+<!-- /.container-fluid -->
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <br />
+        <h2 class="text-center">PREVIEW DATA</h2>
+        <br />
+        <div class="row">
+            <div class="col-6">
+                <h6 class="m-0 font-weight-bold text-primary"><i class="fa fa-user"></i> First Name</h6>
+            </div>
+            <div class="col-6">
+                <h6 class="m-0 font-weight-bold text-secondary"><span id="firstname"></span></h6>
+            </div>
+            <div class="col-6">
+                <h6 class="m-0 font-weight-bold text-primary"><i class="fa fa-user"></i> Last Name</h6>
+            </div>
+            <div class="col-6">
+                <h6 class="m-0 font-weight-bold text-secondary"><span id="lastname"></span></h6>
+            </div>
+            <div class="col-6">
+                <h6 class="m-0 font-weight-bold text-primary"><i class="fa fa-user-clock"></i> Biodata</h6>
+            </div>
+            <div class="col-6">
+                <h6 class="m-0 font-weight-bold text-secondary"><span id="biodataa"></span></h6>
+            </div>
+            <div class="col-6">
+                <h6 class="m-0 font-weight-bold text-primary"><i class="fa fa-location-arrow"></i> Provinsi</h6>
+            </div>
+            <div class="col-6">
+                <h6 class="m-0 font-weight-bold text-secondary"><span id="provinsii"></span></h6>
+            </div>
+            <div class="col-6">
+                <h6 class="m-0 font-weight-bold text-primary"><i class="fa fa-location-arrow"></i> Kabupaten</h6>
+            </div>
+            <div class="col-6">
+                <h6 class="m-0 font-weight-bold text-secondary"><span id="kabupatenn"></span></h6>
+            </div>
+            <div class="col-6">
+                <h6 class="m-0 font-weight-bold text-primary"><i class="fa fa-location-arrow"></i> Kecamatan</h6>
+            </div>
+            <div class="col-6">
+                <h6 class="m-0 font-weight-bold text-secondary"><span id="kecamatann"></span></h6>
+            </div>
+            <div class="col-6">
+                <h6 class="m-0 font-weight-bold text-primary"><i class="fa fa-location-arrow"></i> Kelurahan</h6>
+            </div>
+            <div class="col-6">
+                <h6 class="m-0 font-weight-bold text-secondary"><span id="kelurahann"></span></h6>
+            </div>
+            <div class="col-6">
+                <h6 class="m-0 font-weight-bold text-primary"><i class="fa fa-image"></i> KTP</h6>
+            </div>
+            <div class="col-6">
+                <img id="inputImage" src="" style="width: 100px; height: 100px;" alt="">
+            </div>
+            <div class="col-6">
+                <h6 class="m-0 font-weight-bold text-primary"><i class="fa fa-image"></i> Selfie</h6>
+            </div>
+            <div class="col-6">
+                <img id="inputImage2" src="" style="width: 100px; height: 100px;" alt="">
+            </div>
+            <div class="col-6">
+                <h6 class="m-0 font-weight-bold text-primary"><i class="fa fa-image"></i> Bebas</h6>
+            </div>
+            <div class="col-6">
+                <img id="inputImage3" src="" style="width: 100px; height: 100px;" alt="">
+            </div>
+        </div>
+        <br />
+        <center>
+            <button class="btn btn-lg btn-success" style="width: auto;" onclick=""><i class="fa fa-save"></i> Save Data</button>
+        </center>
+    </div>
+</div>
